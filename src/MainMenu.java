@@ -1,7 +1,12 @@
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class MainMenu extends JPanel implements ActionListener {
     final int SWING_CENTER = SwingConstants.CENTER;
@@ -12,6 +17,8 @@ public class MainMenu extends JPanel implements ActionListener {
     JButton startButton = new JButton("Start");
     JButton scoreButton = new JButton("Score");
     JButton exitButton = new JButton("Exit");
+    final String userName = "user01";
+    final String filePath = "./log/logfile.log";
 
     MainFrame frame;
 

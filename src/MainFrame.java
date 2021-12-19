@@ -1,7 +1,4 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {
     final int WIDTH = 405;

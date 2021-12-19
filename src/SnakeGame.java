@@ -1,39 +1,31 @@
-import java.awt.*;
-import javax.swing.Timer;
-import java.util.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class SnakeGame extends JPanel implements KeyListener, ActionListener {
-    final int SQUARE_SIZE = 10;
-    final int TOTAL_GRID_SIZE = 40;
-    final int BLACK_GRID_SIZE = 38;
-    final int REAL_TIME_TICK = 1000; //1sec
-    final int SNAKE_SPEED = 100;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     final int SNAKE_SPEED_FASTER = 90;
     final int SNAKE_SPEED_FASTEST = 80;
     final int SNAKE_SPEED_WEE = 50;
     final int SNAKE_SPEED_REEE = 30;
     final int INITIAL_TIME = 60;
+    final int PAUSE_KEY = 80; //Keycode for 'P'
     final int UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 
-    int adjustableSpeed = 100;
-    
-    Timer timer = new Timer(REAL_TIME_TICK, this);
-    Timer speed = new Timer(SNAKE_SPEED, this);
+    Timer speed = new Timer(GameData.snakeSpeed, this);
 
     int score, timeRemaining, direction;
-    int applePosX, applePosY,
-        applePosX2, applePosY2,
-        applePosX3, applePosY3;
-    int snakeHeadX = (BLACK_GRID_SIZE) / 2,
-        snakeHeadY = (BLACK_GRID_SIZE) / 2;
     int previousHeadX, previousHeadY;
 
     GameScreen parentPanel;
 
-    WholeBody snake = new WholeBody(snakeHeadX, snakeHeadY);
-    boolean[][] grid = new boolean[TOTAL_GRID_SIZE][TOTAL_GRID_SIZE];
+    WholeBody snake = new WholeBody(GameData.currentPositionX, GameData.currentPositionY);
     boolean gameOver, gameStarted, keyTyped;
 
     class BodyCell {
@@ -58,7 +50,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             this.x = previous.x;
             this.y = previous.y;
         }
-    
+
         public void setTail() {
             isTail = true;
         }
@@ -73,7 +65,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             tail = head;
             bodyLen++;
         }
-        
+
         public void addCell(int x, int y) {
             BodyCell newCell = new BodyCell(x, y);
             if (bodyLen == 1) {
@@ -120,11 +112,11 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
         }
 
         public void falseGrid(BodyCell oldTail) {
-            grid[oldTail.y][oldTail.x] = false;
+            GameData.grid[oldTail.y][oldTail.x] = false;
         }
 
         public void trueGrid(BodyCell newTail) {
-            grid[newTail.y][newTail.x] = true;
+            GameData.grid[newTail.y][newTail.x] = true;
         }
 
         public void drawCells (Graphics g, int newX, int newY) {
@@ -132,8 +124,8 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             BodyCell link = head;
             while (link != null) {
                 g.setColor(Color.RED);
-                g.fillRect(link.x * SQUARE_SIZE, link.y * SQUARE_SIZE,
-                   SQUARE_SIZE, SQUARE_SIZE);
+                g.fillRect(link.x * GameData.squareSize, link.y * GameData.squareSize,
+                  GameData.squareSize, GameData.squareSize);
                 link = link.next;
             }
         }
@@ -143,62 +135,43 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
         setDoubleBuffered(true);
         this.parentPanel = parentPanel;
         timeRemaining = INITIAL_TIME;
-
-        addKeyListener(this);
-
-        grid[snakeHeadY][snakeHeadX] = true;
+        parentPanel.addKeyListener(this);
+        GameData.grid[GameData.currentPositionY][GameData.currentPositionX] = true;
         genAppleLoc();
         validate();
     }
 
+    public void stopSnake() {
+        speed.stop();
+        System.out.println("Stopped");
+    }
+
     private void gameOver() {
         System.out.println("Game Over");
+        GameData.loadData = false;
         speed.stop();
-        timer.stop();
         gameOver = true;
-        this.removeKeyListener(this);
     }
 
     private void genAppleLoc() {
-        applePosX = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        applePosY = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        applePosX2 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        applePosY2 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        applePosX3 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        applePosY3 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-
-        while (grid[applePosY][applePosX]) {
-            applePosX = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-            applePosY = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        }
-
-        while (grid[applePosY2][applePosX2] && (applePosX == applePosX2 && applePosY == applePosY2)) {
-            applePosX2 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-            applePosY2 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        }
-
-        while (grid[applePosY3][applePosX3] && (applePosX == applePosX3 && applePosY == applePosY3)) {
-            applePosX3 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-            applePosY3 = (int) ((Math.random() * (BLACK_GRID_SIZE - 2)) + 1);
-        }
+        GameData.applePosX.set(0, (int) ((Math.random() * (GameData.gridSize - 3)) + 1));
+        GameData.applePosY.set(0, (int) ((Math.random() * (GameData.gridSize - 3)) + 1));
     }
 
     private boolean snakeIsDead () {
-        if (snakeHeadX == 0 || snakeHeadX == TOTAL_GRID_SIZE - 2 || snakeHeadY == 0 || snakeHeadY == TOTAL_GRID_SIZE - 2)
+        if (GameData.currentPositionX == 0
+         || GameData.currentPositionX == GameData.gridSize - 2
+         || GameData.currentPositionY == 0
+         || GameData.currentPositionY == GameData.gridSize - 2)
             return true;
-        if (grid[snakeHeadY][snakeHeadX])
+        if (GameData.grid[GameData.currentPositionY][GameData.currentPositionX])
             return true;
         return false;
     }
 
     private boolean eaten() {
-        if (snakeHeadX == applePosX && snakeHeadY == applePosY) {
-            ++score;
-            return true;
-        } else if (snakeHeadX == applePosX2 && snakeHeadY == applePosY2) {
-            ++score;
-            return true;
-        } else if (snakeHeadX == applePosX3 && snakeHeadY == applePosY3) {
+        if (GameData.currentPositionX == GameData.applePosX.get(0)
+         && GameData.currentPositionY == GameData.applePosY.get(0)) {
             ++score;
             return true;
         }
@@ -207,23 +180,25 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
 
     private void drawInitialBoard(Graphics g) {
         g.setColor(Color.GRAY);
-        for (int i = 0; i < TOTAL_GRID_SIZE - 1; i++) {
-            for (int j = 0; j < TOTAL_GRID_SIZE - 1; j++) {
+        for (int i = 0; i < GameData.gridSize - 1; i++) {
+            for (int j = 0; j < GameData.gridSize - 1; j++) {
                 if (i == 0)
-                    g.fillRect(j * SQUARE_SIZE, 0, SQUARE_SIZE, SQUARE_SIZE);
+                    g.fillRect(j * GameData.squareSize, 0, GameData.squareSize, GameData.squareSize);
                 else if (j == 0)
-                    g.fillRect(0, i * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-                else if (i == TOTAL_GRID_SIZE - 2)
-                    g.fillRect(j * SQUARE_SIZE, i * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-                else if (j == TOTAL_GRID_SIZE - 2)
-                    g.fillRect((TOTAL_GRID_SIZE - 2) * SQUARE_SIZE, i * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                    g.fillRect(0, i * GameData.squareSize, GameData.squareSize, GameData.squareSize);
+                else if (i == GameData.gridSize - 2)
+                    g.fillRect(j * GameData.squareSize, i * GameData.squareSize,
+                     GameData.squareSize, GameData.squareSize);
+                else if (j == GameData.gridSize - 2)
+                    g.fillRect((GameData.gridSize - 2) * GameData.squareSize, i * GameData.squareSize,
+                     GameData.squareSize, GameData.squareSize);
             }
         }
 
         g.setColor(Color.YELLOW);
-        g.fillRect(applePosX * SQUARE_SIZE, applePosY * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-        g.fillRect(applePosX2 * SQUARE_SIZE, applePosY2 * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-        g.fillRect(applePosX3 * SQUARE_SIZE, applePosY3 * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+        g.fillRect(GameData.applePosX.get(0) * GameData.squareSize,
+                    GameData.applePosY.get(0) * GameData.squareSize,
+                    GameData.squareSize, GameData.squareSize);
     }
 
     @Override
@@ -231,8 +206,92 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
         super.paintComponent(g);
         setBackground(Color.BLACK);
         drawInitialBoard(g);
-        snake.drawCells(g, snakeHeadX, snakeHeadY);
+        snake.drawCells(g, GameData.currentPositionX, GameData.currentPositionY);
         validate();
+    }
+
+    @Override
+    public void actionPerformed (ActionEvent e) {
+        Object obj = e.getSource();
+
+        if (obj.equals(speed) && !gameOver) {
+            // do all drawing
+            keyTyped = false;
+
+            previousHeadX = GameData.currentPositionX;
+            previousHeadY = GameData.currentPositionY;
+            if (direction == UP) {
+                --GameData.currentPositionY;
+            } else if (direction == DOWN) {
+                ++GameData.currentPositionY;
+            } else if (direction == LEFT) {
+                --GameData.currentPositionX;
+            } else if (direction == RIGHT) {
+                ++GameData.currentPositionX;
+            }
+
+            if (eaten()) {
+                if (score % 10 == 0) {
+                    if (GameData.snakeSpeed > 10) {
+                        System.out.print("Speeding up");
+                        GameData.snakeSpeed -= 10;
+                    }
+                    speed.setDelay(GameData.snakeSpeed);
+                }
+                parentPanel.refreshScore();
+                snake.addCell(previousHeadX, previousHeadY);
+                genAppleLoc();
+            }
+
+            if (snakeIsDead()) {
+                gameOver();
+                GameData.init();
+            }
+            if (!gameOver)
+                repaint();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if (key == PAUSE_KEY) { // 'P' pressed
+            System.out.println("Pause");
+            if (speed.isRunning()) {
+                speed.stop();
+                gameStarted = true;
+            }
+        }
+
+        if (key == KeyEvent.VK_UP && direction != 2 && !keyTyped) {
+            keyTyped = true;
+            direction = UP;
+            if (!speed.isRunning()) {
+                speed.start();
+                gameStarted = true;
+            }
+        } else if (key == KeyEvent.VK_DOWN && direction != 1 && !keyTyped) {
+            keyTyped = true;
+            direction = DOWN;
+            if (!speed.isRunning()) {
+                speed.start();
+                gameStarted = true;
+            }
+        } else if (key == KeyEvent.VK_LEFT && direction != 4 && !keyTyped) {
+            keyTyped = true;
+            direction = LEFT;
+            if (!speed.isRunning()) {
+                speed.start();
+                gameStarted = true;
+            }
+        } else if (key == KeyEvent.VK_RIGHT && direction != 3 && !keyTyped) {
+            keyTyped = true;
+            direction = RIGHT;
+            if (!speed.isRunning()) {
+                speed.start();
+                gameStarted = true;
+            }
+        }
     }
 
     @Override
@@ -241,88 +300,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if (key == KeyEvent.VK_UP && direction != 2 && !keyTyped) {
-            keyTyped = true;
-            direction = UP;
-            if (!speed.isRunning()) {
-                speed.start();
-                timer.start();
-                gameStarted = true;
-            }
-        } else if (key == KeyEvent.VK_DOWN && direction != 1 && !keyTyped) {
-            keyTyped = true;
-            direction = DOWN;
-            if (!speed.isRunning()) {
-                speed.start();
-                timer.start();
-                gameStarted = true;
-            }
-        } else if (key == KeyEvent.VK_LEFT && direction != 4 && !keyTyped) {
-            keyTyped = true;
-            direction = LEFT;
-            if (!speed.isRunning()) {
-                speed.start();
-                timer.start();
-                gameStarted = true;
-            }
-        } else if (key == KeyEvent.VK_RIGHT && direction != 3 && !keyTyped) {
-            keyTyped = true;
-            direction = RIGHT;
-            if (!speed.isRunning()) {
-                speed.start();
-                timer.start();
-                gameStarted = true;
-            }
-        }
-    }
-
-
-    @Override
     public void keyReleased(KeyEvent e) {
 
-    }
-
-    @Override
-    public void actionPerformed (ActionEvent e) {
-        Object obj = e.getSource();
-
-        if (obj.equals(timer) && !gameOver) {
-          //--timeRemaining;
-        }
-
-        if (obj.equals(speed) && !gameOver) {
-            keyTyped = false;
-            previousHeadX = snakeHeadX;
-            previousHeadY = snakeHeadY;
-            if (direction == UP) {
-                --snakeHeadY;
-            } else if (direction == DOWN) {
-                ++snakeHeadY;
-            } else if (direction == LEFT) {
-                --snakeHeadX;
-            } else if (direction == RIGHT) {
-                ++snakeHeadX;
-            }
-
-            if (eaten()) {
-                if (score % 10 == 0) {
-                    if (adjustableSpeed > 10) {
-                        adjustableSpeed -= 10;
-                        System.out.println("speed decreased " + adjustableSpeed);
-                    }
-                    speed.setDelay(adjustableSpeed);
-                }
-                parentPanel.refreshScore();
-                snake.addCell(previousHeadX, previousHeadY);
-                genAppleLoc();
-            }
-
-            if (snakeIsDead())
-                gameOver();
-            if (!gameOver)
-                repaint();
-        }
     }
 }

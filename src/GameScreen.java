@@ -1,12 +1,20 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 public class GameScreen extends JPanel implements ActionListener {
     static JProgressBar scoreBar;
-    JButton backButton;
     static JLabel scoreBoard;
+    JButton backButton, endButton;
     SnakeGame snakeGame;
     MainFrame frame;
 
@@ -36,22 +44,31 @@ public class GameScreen extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout());
 
         scoreBar = new JProgressBar();
-        snakeGame = new SnakeGame(this);
+
+        //load game
+        GameData.autoInit();
         JPanel lowerPanel = new JPanel();
         backButton = new JButton("To Main");
+        endButton = new JButton("End Game");
+        snakeGame = new SnakeGame(this);
         scoreBoard = new JLabel("Score: " + snakeGame.score);
 
         frame.requestFocusInWindow();
         frame.setFocusable(true);
         frame.addKeyListener(snakeGame);
+        frame.requestFocus();
 
         backButton.setBackground(Color.WHITE);
-        backButton.setPreferredSize(new Dimension(80, 30));
+        backButton.setPreferredSize(new Dimension(120, 30));
+        endButton.setBackground(Color.WHITE);
+        endButton.setPreferredSize(new Dimension(120, 30));
+
         scoreBoard.setBackground(Color.WHITE);
         scoreBoard.setPreferredSize(new Dimension(80, 30));
         scoreBar.setPreferredSize(new Dimension(getWidth(), 20));
         lowerPanel.setBackground(Color.GRAY);
         lowerPanel.add(backButton);
+        lowerPanel.add(endButton);
         lowerPanel.add(scoreBoard);
         lowerPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
@@ -60,12 +77,25 @@ public class GameScreen extends JPanel implements ActionListener {
         this.add(lowerPanel, BorderLayout.SOUTH);
 
         backButton.addActionListener(this);
+        endButton.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         if (obj.equals(backButton)) {
+            //Save process
+            snakeGame.stopSnake();
+            frame.removeKeyListener(snakeGame);
+            GameData.loadData = true;
+            MainMenu menu = new MainMenu(frame);
+            frame.remove(this);
+            frame.add(menu);
+            frame.validate();
+        } else if (obj.equals(endButton)) {
+            //Save points and flush game
+            frame.removeKeyListener(snakeGame);
+            GameData.loadData = false;
             MainMenu menu = new MainMenu(frame);
             frame.remove(this);
             frame.add(menu);
