@@ -88,7 +88,7 @@ Snake cannot move in reverse direction, because the snake cannot eat itself.
 ## How to run?
 
 Java jre must be installed first, please download newest java from [here](https://www.java.com/en/)
-In oder to execute the program, please download the file by cloning this repository.
+In oder to execute the program, please download the file by forking this repository. Or you can download a zipfile from above tab.
 
 </br>
 
@@ -100,7 +100,7 @@ Data files are version sensitive, app version mismatch will cause error on data 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Can generate text-based map with required value fields. When you have to deal with multiple input cases for your own algorithm, use this! this will save your time!
+Entertainment
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
