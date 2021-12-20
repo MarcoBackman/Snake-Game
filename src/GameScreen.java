@@ -36,7 +36,7 @@ public class GameScreen extends JPanel implements ActionListener {
     }
 
     public void refreshScore() {
-        scoreBoard.setText("Score: " + snakeGame.score);
+        scoreBoard.setText("Score: " + GameData.score);
         frame.validate();
     }
 
@@ -51,7 +51,7 @@ public class GameScreen extends JPanel implements ActionListener {
         backButton = new JButton("To Main");
         endButton = new JButton("End Game");
         snakeGame = new SnakeGame(this);
-        scoreBoard = new JLabel("Score: " + snakeGame.score);
+        scoreBoard = new JLabel("Score: " + GameData.score);
 
         frame.requestFocusInWindow();
         frame.setFocusable(true);

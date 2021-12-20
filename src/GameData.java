@@ -1,4 +1,7 @@
+import java.awt.Graphics;
+
 import java.io.Serializable;
+
 import java.util.LinkedList;
 
 public class GameData implements Serializable {
@@ -12,15 +15,14 @@ public class GameData implements Serializable {
     //Snake information
     public static int currentPositionX, currentPositionY;
     public static int previousPositionX, previousPositionY;
+    public static WholeBody snake;
 
-    //Object information
+    //Target information
     public static LinkedList<Integer> applePosX, applePosY;
 
     //Game environment
-    public static int snakeSpeed;
     public static boolean[][] grid;
-    public static int gridSize;
-    public static int squareSize;
+    public static int snakeSpeed, squareSize, gridSize, score, direction;
 
     //Rum this on user requesst
     //minumum size 8, max to 100
@@ -30,12 +32,15 @@ public class GameData implements Serializable {
         currentPositionY = (INIT_GRID_SIZE - 2) / 2;
         previousPositionX = 0;
         previousPositionY = 0;
+        direction = 0;
         applePosX = new LinkedList<Integer>();
         applePosY = new LinkedList<Integer>();
         initialApple();
         snakeSpeed = INIT_SNAKE_SPEED;
         grid = new boolean[INIT_GRID_SIZE][INIT_GRID_SIZE];
         gridSize = INIT_GRID_SIZE;
+        snake = new WholeBody(currentPositionX, currentPositionY);
+        score = 0;
     }
 
     private static void initialApple() {
