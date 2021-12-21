@@ -2,7 +2,7 @@
 public class BodyCell {
     int x;
     int y;
-    BodyCell next;
+    BodyCell next, previous;
     boolean isTail;
     public BodyCell(int x, int y) {
         this.x = x;
@@ -14,12 +14,11 @@ public class BodyCell {
     }
 
     public BodyCell getNext() {
-            return next;
+        return next;
     }
 
-    public void updatePos(BodyCell previous) {
-        this.x = previous.x;
-        this.y = previous.y;
+    public BodyCell getPreviois() {
+        return previous;
     }
 
     public void setTail() {

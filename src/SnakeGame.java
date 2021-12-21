@@ -20,8 +20,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     Timer speed = new Timer(GameData.snakeSpeed, this);
 
-    int previousHeadX, previousHeadY;
-
     GameScreen parentPanel;
 
     boolean gameOver, gameStarted, keyTyped;
@@ -54,13 +52,19 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     }
 
     private boolean snakeIsDead () {
+        //bumps into a wall
         if (GameData.currentPositionX == 0
          || GameData.currentPositionX == GameData.gridSize - 2
          || GameData.currentPositionY == 0
-         || GameData.currentPositionY == GameData.gridSize - 2)
+         || GameData.currentPositionY == GameData.gridSize - 2) {
+            System.out.println("Hits wall!");
             return true;
-        if (GameData.grid[GameData.currentPositionY][GameData.currentPositionX])
+         }
+        //if snake has eaten it self
+        if (GameData.grid[GameData.currentPositionY][GameData.currentPositionX]) {
+            System.out.println("Eaten itself!");
             return true;
+        }
         return false;
     }
 
@@ -89,7 +93,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                      GameData.squareSize, GameData.squareSize);
             }
         }
-        GameData.snake.drawCells(g, GameData.currentPositionX, GameData.currentPositionY);
+        GameData.snake.drawCells(g);
         g.setColor(Color.YELLOW);
         g.fillRect(GameData.applePosX.get(0) * GameData.squareSize,
                     GameData.applePosY.get(0) * GameData.squareSize,
@@ -101,32 +105,34 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         super.paintComponent(g); //overwrites parent's graphics
         setBackground(Color.BLACK);
         drawInitialBoard(g);
-        GameData.snake.drawCells(g, GameData.currentPositionX, GameData.currentPositionY);
+        GameData.snake.drawCells(g);
         validate();
     }
 
     @Override
     public void actionPerformed (final ActionEvent e) {
-        beforeTime = System.currentTimeMillis();
+        Toolkit.getDefaultToolkit().sync(); //This prevents repaint desync on Linux OS
         Object obj = e.getSource();
-
         if (obj.equals(speed) && !gameOver) {
             // do all drawing
             keyTyped = false;
 
-            previousHeadX = GameData.currentPositionX;
-            previousHeadY = GameData.currentPositionY;
             if (GameData.direction == UP) {
-                --GameData.currentPositionY;
+                GameData.snake.shiftCell(GameData.currentPositionX,
+                                         --GameData.currentPositionY);
             } else if (GameData.direction == DOWN) {
-                ++GameData.currentPositionY;
+                GameData.snake.shiftCell(GameData.currentPositionX,
+                                         ++GameData.currentPositionY);
             } else if (GameData.direction == LEFT) {
-                --GameData.currentPositionX;
+                GameData.snake.shiftCell(--GameData.currentPositionX,
+                                         GameData.currentPositionY);
             } else if (GameData.direction == RIGHT) {
-                ++GameData.currentPositionX;
+                GameData.snake.shiftCell(++GameData.currentPositionX,
+                                         GameData.currentPositionY);
             }
 
             if (eaten()) {
+                System.out.println("Eaten");
                 if (GameData.score % 10 == 0) {
                     if (GameData.snakeSpeed > 10) {
                         System.out.print("Speeding up");
@@ -135,17 +141,17 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                     speed.setDelay(GameData.snakeSpeed);
                 }
                 parentPanel.refreshScore();
-                GameData.snake.addCell(previousHeadX, previousHeadY);
+
+                GameData.snake.addCell(new BodyCell(GameData.currentPositionX, GameData.currentPositionY));
                 genAppleLoc();
             }
-
+            //Calls this after shifting snake cell
             if (snakeIsDead()) {
                 gameOver();
                 GameData.init();
             }
 
             if (!gameOver) {
-                Toolkit.getDefaultToolkit().sync(); //This prevents repaint desync on Linux OS
                 repaint();
             }
         }

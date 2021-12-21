@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 public class GameData {
     //returns if the data is saved data or not
-    final public static int INIT_GRID_SIZE = 40;
+    final public static int INIT_GRID_SIZE = 80;
     final public static int INIT_SNAKE_SPEED = 100;
     final public static int INIT_SQUARE_SIZE = 5;
 
@@ -23,6 +23,7 @@ public class GameData {
     //Rum this on user requesst
     //minumum size 8, max to 100
     public static void init() {
+        System.out.println("Initializing Game Data");
         squareSize = INIT_SQUARE_SIZE;
         currentPositionX = (INIT_GRID_SIZE - 2) / 2;
         currentPositionY = (INIT_GRID_SIZE - 2) / 2;

@@ -13,61 +13,51 @@ public class WholeBody {
         bodyLen++;
     }
 
-    public void addCell(int x, int y) {
-        BodyCell newCell = new BodyCell(x, y);
-        if (bodyLen == 1) {
-            newCell.next = head;
-            tail = head;
-            head = newCell;
-            bodyLen++;
-        } else {
-            newCell.next = head;
-            head = newCell;
-            bodyLen++;
-        }
-    }
-
-    public void shiftCell(int newPosX, int newPosY) {
-        BodyCell newPos = new BodyCell(newPosX, newPosY);
-        if (bodyLen == 1) {
-            falseGrid(tail);
-            tail = head = newPos;
-            trueGrid(tail);
-        } else if (bodyLen == 2) {
-            falseGrid(tail);
-            newPos.next = head;
-            tail = head;
-            tail.next = null;
-            head = newPos;
-            trueGrid(head);
-            trueGrid(tail);
-        } else {
-            falseGrid(tail);
-            newPos.next = head;
-            BodyCell walk = head;
-            while (walk.next != null) {
-                trueGrid(walk);
-                if (walk.next == tail) {
-                    tail = walk;
-                    tail.next = null;
-                    break;
-                }
-                walk = walk.next;
-            }
-            head = newPos;
-        }
-    }
-
-    public void falseGrid(BodyCell oldTail) {
+    public void setSafeGrid(BodyCell oldTail) {
         GameData.grid[oldTail.y][oldTail.x] = false;
     }
 
-    public void trueGrid(BodyCell newTail) {
+    public void setDangerGrid(BodyCell newTail) {
         GameData.grid[newTail.y][newTail.x] = true;
     }
 
-    public void drawCells (Graphics g, int newX, int newY) {
-        GameData.snake.shiftCell (newX, newY);
+    public void addCell(BodyCell newHead) {
+        if (bodyLen == 1) {
+            newHead.next = head;
+            tail = newHead.next;
+            head = newHead;
+            tail.previous = head;
+        } else {
+            newHead.next = head;
+            head.previous = newHead;
+            head = newHead;
+        }
+        ++bodyLen;
+    }
+
+    //remove tail and set new tail to previous one
+    public void removeCell(BodyCell oldTail) {
+        setSafeGrid(oldTail); //set that location as a free cell
+        //bodyLen cannot be 1 at this point
+        if (bodyLen == 2) {
+            tail = head;
+            head.next = null;
+        } else {
+            tail = oldTail.previous;
+            tail.next = null;
+        }
+        --bodyLen;
+    }
+
+    public void shiftCell(int newPosX, int newPosY) {
+        BodyCell newHead = new BodyCell(newPosX, newPosY);
+        BodyCell oldTail = tail;
+        setDangerGrid(head);
+        addCell(newHead);
+        removeCell(oldTail);
+    }
+
+    public void drawCells (Graphics g) {
         BodyCell link = GameData.snake.head;
         while (link != null) {
             g.setColor(Color.RED);
