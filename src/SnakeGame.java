@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -203,31 +202,4 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
-    /*
-    class CounterTask implements Runnable{
-        public void run() {
-            try {
-                for (int i = 0; i < 10; i++) {
-                    final String countValue = String.valueOf(i);
-                    // use this to put UI update tasks in the event queue
-                    EventQueue.invokeLater(new Runnable() {
-                        public void run() {
-                            repaint();
-                        }
-                    });
-                    Thread.sleep(100);
-                }
-
-                EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        output.setText("Done");
-                        btnGo.setEnabled(true);
-                    }
-                });
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-    */
 }
