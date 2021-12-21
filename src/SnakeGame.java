@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -24,8 +26,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     GameScreen parentPanel;
 
     boolean gameOver, gameStarted, keyTyped;
+    long beforeTime = 0;
 
-    protected SnakeGame(GameScreen parentPanel) {
+    protected SnakeGame(final GameScreen parentPanel) {
         setDoubleBuffered(true);
         this.parentPanel = parentPanel;
         parentPanel.addKeyListener(this);
@@ -71,7 +74,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         return false;
     }
 
-    private void drawInitialBoard(Graphics g) {
+    private void drawInitialBoard(final Graphics g) {
         g.setColor(Color.GRAY);
         for (int i = 0; i < GameData.gridSize - 1; i++) {
             for (int j = 0; j < GameData.gridSize - 1; j++) {
@@ -95,7 +98,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(final Graphics g) {
         super.paintComponent(g); //overwrites parent's graphics
         setBackground(Color.BLACK);
         drawInitialBoard(g);
@@ -104,7 +107,8 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void actionPerformed (ActionEvent e) {
+    public void actionPerformed (final ActionEvent e) {
+        beforeTime = System.currentTimeMillis();
         Object obj = e.getSource();
 
         if (obj.equals(speed) && !gameOver) {
@@ -140,13 +144,16 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 gameOver();
                 GameData.init();
             }
-            if (!gameOver)
+
+            if (!gameOver) {
+                Toolkit.getDefaultToolkit().sync(); //This prevents repaint desync on Linux OS
                 repaint();
+            }
         }
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(final KeyEvent e) {
         int key = e.getKeyCode();
         if (key == PAUSE_KEY) { // 'P' pressed
             System.out.println("Pause");
@@ -196,4 +203,31 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
+    /*
+    class CounterTask implements Runnable{
+        public void run() {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    final String countValue = String.valueOf(i);
+                    // use this to put UI update tasks in the event queue
+                    EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            repaint();
+                        }
+                    });
+                    Thread.sleep(100);
+                }
+
+                EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        output.setText("Done");
+                        btnGo.setEnabled(true);
+                    }
+                });
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+    */
 }

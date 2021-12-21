@@ -67,7 +67,6 @@ public class WholeBody {
     }
 
     public void drawCells (Graphics g, int newX, int newY) {
-        System.out.println("Drawing cells");
         GameData.snake.shiftCell (newX, newY);
         BodyCell link = GameData.snake.head;
         while (link != null) {

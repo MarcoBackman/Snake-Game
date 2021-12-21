@@ -1,10 +1,6 @@
-import java.awt.Graphics;
-
-import java.io.Serializable;
-
 import java.util.LinkedList;
 
-public class GameData implements Serializable {
+public class GameData {
     //returns if the data is saved data or not
     final public static int INIT_GRID_SIZE = 40;
     final public static int INIT_SNAKE_SPEED = 100;

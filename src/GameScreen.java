@@ -3,8 +3,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -45,7 +43,6 @@ public class GameScreen extends JPanel implements ActionListener {
 
         scoreBar = new JProgressBar();
 
-        //load game
         GameData.autoInit();
         JPanel lowerPanel = new JPanel();
         backButton = new JButton("To Main");
