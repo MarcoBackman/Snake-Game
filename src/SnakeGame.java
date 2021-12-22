@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,11 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
-    final int SNAKE_SPEED_FASTER = 90;
-    final int SNAKE_SPEED_FASTEST = 80;
-    final int SNAKE_SPEED_WEE = 50;
-    final int SNAKE_SPEED_REEE = 30;
-    final int INITIAL_TIME = 60;
     final int PAUSE_KEY = 80; //Keycode for 'P'
     final int UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 
@@ -30,7 +26,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         this.parentPanel = parentPanel;
         parentPanel.addKeyListener(this);
         GameData.grid[GameData.currentPositionY][GameData.currentPositionX] = true;
-        genAppleLoc();
         validate();
     }
 
@@ -41,14 +36,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     private void gameOver() {
         System.out.println("Game Over");
+        new SaveData().saveToFile("", "Anonymous",GameData.score);
         GameData.loadData = false;
         speed.stop();
         gameOver = true;
-    }
-
-    private void genAppleLoc() {
-        GameData.applePosX.set(0, (int) ((Math.random() * (GameData.gridSize - 3)) + 1));
-        GameData.applePosY.set(0, (int) ((Math.random() * (GameData.gridSize - 3)) + 1));
     }
 
     private boolean snakeIsDead () {
@@ -69,10 +60,13 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     }
 
     private boolean eaten() {
-        if (GameData.currentPositionX == GameData.applePosX.get(0)
-         && GameData.currentPositionY == GameData.applePosY.get(0)) {
-            ++GameData.score;
-            return true;
+        for (int i = 0; i < GameData.numOfApple; i++) {
+            if (GameData.currentPositionX == GameData.applePosX.get(i)
+            && GameData.currentPositionY == GameData.applePosY.get(i)) {
+                ++GameData.score;
+                GameData.setApplePos(i);
+                return true;
+            }
         }
         return false;
     }
@@ -94,10 +88,16 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             }
         }
         GameData.snake.drawCells(g);
-        g.setColor(Color.YELLOW);
-        g.fillRect(GameData.applePosX.get(0) * GameData.squareSize,
-                    GameData.applePosY.get(0) * GameData.squareSize,
-                    GameData.squareSize, GameData.squareSize);
+        Graphics2D ga = (Graphics2D)g;
+        ga.setPaint(Color.YELLOW);
+        for (int i = 0; i < GameData.numOfApple; i++) {
+            ga.fillOval(GameData.applePosX.get(i) * GameData.squareSize,
+                        GameData.applePosY.get(i) * GameData.squareSize,
+                        GameData.squareSize,
+                        GameData.squareSize);
+        }
+        repaint();
+        ga.dispose();
     }
 
     @Override
@@ -137,13 +137,15 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                     if (GameData.snakeSpeed > 10) {
                         System.out.print("Speeding up");
                         GameData.snakeSpeed -= 10;
+                        if (GameData.numOfApple > 1) {
+                            --GameData.numOfApple;
+                        }
                     }
                     speed.setDelay(GameData.snakeSpeed);
                 }
                 parentPanel.refreshScore();
 
                 GameData.snake.addCell(new BodyCell(GameData.currentPositionX, GameData.currentPositionY));
-                genAppleLoc();
             }
             //Calls this after shifting snake cell
             if (snakeIsDead()) {

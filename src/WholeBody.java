@@ -59,10 +59,20 @@ public class WholeBody {
 
     public void drawCells (Graphics g) {
         BodyCell link = GameData.snake.head;
+        g.setColor(Color.GREEN);
+        g.fillRect(link.x * GameData.squareSize, link.y * GameData.squareSize,
+              GameData.squareSize, GameData.squareSize);
+        link = link.next;
         while (link != null) {
             g.setColor(Color.RED);
             g.fillRect(link.x * GameData.squareSize, link.y * GameData.squareSize,
               GameData.squareSize, GameData.squareSize);
+            if (link.next != null) {
+                link = link.next;
+                g.setColor(Color.GRAY);
+                g.fillRect(link.x * GameData.squareSize, link.y * GameData.squareSize,
+                  GameData.squareSize, GameData.squareSize);
+            }
             link = link.next;
         }
     }

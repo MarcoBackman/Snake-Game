@@ -2,11 +2,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SaveData {
+    private final String DEFAULT_FILE_LOC = "./User-Points.log";
     //Find a file first
-    public void SaveToFile(String filePath, String user, int points) {
-        File file = new File(filePath);
+    public void saveToFile(final String filePath, final String user, final int points) {
+        File file;
+        if (filePath == "") {
+            file = new File(DEFAULT_FILE_LOC);
+        } else {
+            file = new File(filePath);
+        }
         //Check path
         checkPath(file);
         //Check file
@@ -18,7 +25,7 @@ public class SaveData {
         try {
             //check if the parent path exists
             if (!file.getParentFile().exists()) {
-                System.out.print("Creating path");
+                System.out.println("Creating path");
                 file.getParentFile().mkdirs();
             }
         } catch (Exception e) {
@@ -26,21 +33,23 @@ public class SaveData {
         }
     }
 
-    private void checkFile(File file) {
+    private void checkFile(final File file) {
         try {
             if (!file.exists()){
-                System.out.print("Creating file");
+                System.out.println("Creating file");
                 file.createNewFile();
+            } else {
+                System.out.println("Existing file found.");
             }
         } catch (Exception e) {
             System.out.println("Error on file/path creation" + e);
         }
     }
 
-    public void appendContent(String user, int points, File file) {
+    public void appendContent(final String user, final int points, final File file) {
         //Get local machine timezone
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timeStamp = sdf.toString();
+        String timeStamp = sdf.format(new Date());
         String contents = String.format("%s - %10s : %5d", timeStamp, user, points);
 
         try {

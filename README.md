@@ -18,6 +18,13 @@
 <div align="center">
 
 </br>
+  <p>Game screen</p>
+  <a href="https://github.com/MarcoBackman/Snake-Game">
+    <img src="img/game_screen.png" alt="game_screen" width="380" height="440">
+  </a>
+
+  </br>
+  </br>
 
 <h3 align="center">Snake Game</h3>
 
@@ -44,32 +51,27 @@ A simple snake game app in java
 There are currently 6 features implemented.
 
 1. User can use arrow keys to move the snake
-2. User can see previous scores and highest scores
-3. User can load from previous save, or can decide to play new game.
+2. User can see previous scores
+3. User can continue game from the previous play, or can decide to play new game
+4. Snake gets faster every 10 eat, also reduces the amount of apple to eat
 
 For initial start, snake usually starts at the middle.
 Snake cannot move in reverse direction, because the snake cannot eat itself.
 
-## Demo videos
+## Demo image and video
 
 <div align="center">
-  </br>
-  <p>Main Menu</p>
+  <p>Video</p>
   <a href="https://github.com/MarcoBackman/Snake-Game">
-    <img src="img/generator.gif" alt="main_menu" width="380" height="340">
+    <img src="img/demo.gif" alt="main_menu" width="380" height="440">
   </a>
 
   </br>
   </br>
-  </br>
-  <p>Game screen</p>
-  <a href="https://github.com/MarcoBackman/Snake-Game">
-    <img src="img/editor.gif" alt="game_screen" width="380" height="340">
-  </a>
 
   <p>Screen_board</p>
   <a href="https://github.com/MarcoBackman/Snake-Game">
-    <img src="img/editor.gif" alt="screen_board" width="380" height="340">
+    <img src="img/score_board.png" alt="screen_board" width="260" height="130">
   </a>
 
 </div>
@@ -96,22 +98,10 @@ In oder to execute the program, please download the file by forking this reposit
 
 Data files are version sensitive, app version mismatch will cause error on data load.
 
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 Entertainment
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- CONTACT -->

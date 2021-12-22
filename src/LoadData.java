@@ -8,10 +8,17 @@ import java.io.FileReader;
  */
 
 public class LoadData {
+    private final String DEFAULT_FILE_LOC = "User-Points.log";
+
     //Load file from given path
-    public void readPointsFromFile(String fileDirectory) {
+    public void readPointsFromFile(final String fileDirectory) {
+        File file;
+        if (fileDirectory == "") {
+          file = new File(DEFAULT_FILE_LOC);
+        } else {
+          file = new File(fileDirectory);
+        }
         try {
-          File file = new File(fileDirectory);
           FileReader fr = new FileReader(file);
 
           try(BufferedReader br = new BufferedReader(fr)) {

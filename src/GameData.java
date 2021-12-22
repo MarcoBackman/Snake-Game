@@ -2,9 +2,10 @@ import java.util.LinkedList;
 
 public class GameData {
     //returns if the data is saved data or not
-    final public static int INIT_GRID_SIZE = 80;
-    final public static int INIT_SNAKE_SPEED = 100;
-    final public static int INIT_SQUARE_SIZE = 5;
+    final public static int INIT_GRID_SIZE = 82;
+    final public static int INIT_SNAKE_SPEED = 80;
+    final public static int INIT_SQUARE_SIZE = 7;
+    final public static int INIT_APPLE_NUM = 30;
 
     public static boolean loadData;
 
@@ -18,7 +19,12 @@ public class GameData {
 
     //Game environment
     public static boolean[][] grid;
-    public static int snakeSpeed, squareSize, gridSize, score, direction;
+    public static int snakeSpeed,
+                      squareSize,
+                      gridSize,
+                      score,
+                      direction,
+                      numOfApple;
 
     //Rum this on user requesst
     //minumum size 8, max to 100
@@ -30,9 +36,12 @@ public class GameData {
         previousPositionX = 0;
         previousPositionY = 0;
         direction = 0;
+
         applePosX = new LinkedList<Integer>();
         applePosY = new LinkedList<Integer>();
+        numOfApple = INIT_APPLE_NUM;
         initialApple();
+
         snakeSpeed = INIT_SNAKE_SPEED;
         grid = new boolean[INIT_GRID_SIZE][INIT_GRID_SIZE];
         gridSize = INIT_GRID_SIZE;
@@ -41,17 +50,31 @@ public class GameData {
     }
 
     private static void initialApple() {
-        applePosX.add((int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
-        applePosY.add((int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+        for (int i = 0; i < numOfApple; i++) {
+            applePosX.add(i, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+            applePosY.add(i, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
 
-        while (applePosX.get(0) == currentPositionX && applePosY.get(0) == currentPositionY) {
-            applePosX.set(0, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
-            applePosY.set(0, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+            while (applePosX.get(i) == currentPositionX
+             && applePosY.get(i) == currentPositionY) {
+                applePosX.set(i, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+                applePosY.set(i, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+            }
+        }
+    }
+
+    public static void setApplePos(int appleNumber) {
+        applePosX.set(appleNumber, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+        applePosY.set(appleNumber, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+
+        while (applePosX.get(appleNumber) == currentPositionX
+            && applePosY.get(appleNumber) == currentPositionY) {
+            applePosX.set(appleNumber, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
+            applePosY.set(appleNumber, (int) ((Math.random() * (INIT_GRID_SIZE - 3)) + 1));
         }
     }
 
     //Rum this on game load
-    public static void autoInit() {
+    protected static void autoInit() {
         if (loadData == false) {
             init();
         }

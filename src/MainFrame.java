@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {
-    final int WIDTH = 405;
+    final int WIDTH = 600;
     final int HEIGHT = 700;
 
     private MainFrame() {

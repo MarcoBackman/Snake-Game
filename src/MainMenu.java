@@ -100,7 +100,7 @@ public class MainMenu extends JPanel implements ActionListener {
             GameScreen snakeGameScreen = new GameScreen(frame);
             addPanelToFrame(snakeGameScreen, this);
         } else if (obj.equals(scoreButton)) {
-
+            new LoadData().readPointsFromFile("");
         } else if (obj.equals(exitButton)) {
             System.exit(0);
         }

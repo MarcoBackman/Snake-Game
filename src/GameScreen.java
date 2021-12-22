@@ -97,6 +97,7 @@ public class GameScreen extends JPanel implements ActionListener {
             frame.remove(this);
             frame.add(menu);
             frame.validate();
+            new SaveData().saveToFile("", "Anonymous",GameData.score);
         }
     }
 }
