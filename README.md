@@ -40,7 +40,7 @@ Snake cannot move in reverse direction, because the snake cannot eat itself.
 ## Requirements for developer setup
 
 - Java must be installed first, please make sure that your machine is operable with Java version higher than 17+ [here](https://www.java.com/en/)
-  In oder to execute the program, please download the file by forking this repository. Or you can download a zipfile from above tab.
+  In oder to execute the program, please download the file by forking this repository. Or you can download a zipfile from above tab. Or you may use existing batch file for auto setup.
 
 - Data files are version sensitive, app version mismatch will cause error on data load.
 
