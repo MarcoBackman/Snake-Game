@@ -1,3 +1,7 @@
+package coponents;
+
+import data.GameData;
+
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -7,7 +11,7 @@ public class WholeBody {
     public BodyCell tail;
     public int bodyLen;
 
-    WholeBody (int x, int y) {
+    public WholeBody(int x, int y) {
         head = new BodyCell(x, y);
         tail = head;
         bodyLen++;

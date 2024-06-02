@@ -7,24 +7,56 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-[![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
+## Regular user setup
+
+Only for Windows for batch execution. Other Operating System requires manual command execution.
+
+- Simply execute `Run.bat` file with `Run As Administrator` .
+Follow instructions from batch file. This batch will download and install jdk 17 and setup the environment variables.
+
+
+- If you wish to set up by your own, please install jdk17+ and have it set as environment variable. Then run following command at the root of the downloaded file.
+`java -jar Snake-Game.jar`
+
+## How to play game
+
+A simple snake game app in java
+
+There are currently 6 features implemented.
+
+1. User can use arrow keys to move the snake
+2. User can see previous scores
+3. User can continue game from the previous play, or can decide to play new game
+4. Snake gets faster every 10 eat, also reduces the amount of apple to eat
+
+- For initial start, snake usually starts at the middle.
+Snake cannot move in reverse direction, because the snake cannot eat itself.
+
+- You can configure configuration file in `src/config/config.json` to adjust the game feature.(Removing file will not run the program)
+
+## Requirements for developer setup
+
+- Java must be installed first, please make sure that your machine is operable with Java version higher than 17+ [here](https://www.java.com/en/)
+  In oder to execute the program, please download the file by forking this repository. Or you can download a zipfile from above tab.
+
+- Data files are version sensitive, app version mismatch will cause error on data load.
+
+#### Dependencies
+- Jackson databind 2.15.2 - to read JSON file: [download jar package for manual setup](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind/2.15.2)
+- Jackson's annotation 2.15.2 - to read JSON file: [download jar package for manual setup](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations/2.15.2)
+- Jackson core 2.15.2 - to read JSON file: [download jar package for manual setup](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core/2.15.2)
 
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-
-</br>
   <p>Game screen</p>
   <a href="https://github.com/MarcoBackman/Snake-Game">
     <img src="img/game_screen.png" alt="game_screen" width="380" height="440">
   </a>
-
-  </br>
-  </br>
 
 <h3 align="center">Snake Game</h3>
 
@@ -39,24 +71,6 @@
     <a href="https://github.com/MarcoBackman/Snake-Game/issues">Request Feature</a>
   </p>
 </div>
-
-</br>
-</br>
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-A simple snake game app in java
-
-There are currently 6 features implemented.
-
-1. User can use arrow keys to move the snake
-2. User can see previous scores
-3. User can continue game from the previous play, or can decide to play new game
-4. Snake gets faster every 10 eat, also reduces the amount of apple to eat
-
-For initial start, snake usually starts at the middle.
-Snake cannot move in reverse direction, because the snake cannot eat itself.
 
 ## Demo image and video
 
@@ -75,39 +89,6 @@ Snake cannot move in reverse direction, because the snake cannot eat itself.
   </a>
 
 </div>
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-</br>
-
-### Built With
-
-* [Java JRE 15.0.1](https://www.java.com/en/)
-
-</br>
-</br>
-
-<!-- GETTING STARTED -->
-## How to run?
-
-Java jre must be installed first, please download newest java from [here](https://www.java.com/en/)
-In oder to execute the program, please download the file by forking this repository. Or you can download a zipfile from above tab.
-
-</br>
-
-### Prerequisites
-
-Data files are version sensitive, app version mismatch will cause error on data load.
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Entertainment
-
-
-<!-- CONTACT -->
-## Contact
-
-Marco Backman - roni2006@hanmail.net
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

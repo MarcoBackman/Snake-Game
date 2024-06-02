@@ -1,3 +1,4 @@
+package coponents;
 
 public class BodyCell {
     int x;

@@ -1,3 +1,7 @@
+package data;
+
+import coponents.WholeBody;
+
 import java.util.LinkedList;
 
 public class GameData {
@@ -7,6 +11,7 @@ public class GameData {
     final public static int INIT_SQUARE_SIZE = 7;
     final public static int INIT_APPLE_NUM = 30;
 
+    @Deprecated
     public static boolean loadData;
 
     //Snake information
@@ -74,8 +79,8 @@ public class GameData {
     }
 
     //Rum this on game load
-    protected static void autoInit() {
-        if (loadData == false) {
+    public static void autoInit() {
+        if (!loadData) {
             init();
         }
     }
