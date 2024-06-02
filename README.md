@@ -15,7 +15,7 @@
 Only for Windows for batch execution. Other Operating System requires manual command execution.
 
 - Simply execute `Run.bat` file with `Run As Administrator` .
-Follow instructions from batch file. This batch will download and install jdk 17 and setup the environment variables.
+Follow instructions from batch file. This batch will download and install jdk 17 and setup the environment variables if not set.
 
 
 - If you wish to set up by your own, please install jdk17+ and have it set as environment variable. Then run following command at the root of the downloaded file.
